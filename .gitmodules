@@ -1,0 +1,3 @@
+[submodule "jokar-project-description"]
+	path = jokar-project-description
+	url = git@github.com:joaopcbertoldo/jokar-project-description.git
