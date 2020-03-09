@@ -4,3 +4,6 @@
 [submodule "jokar-project-report"]
 	path = jokar-project-report
 	url = git@github.com:joaopcbertoldo/jokar-project-report.git
+[submodule "histwords"]
+	path = histwords
+	url = git@github.com:williamleif/histwords.git
