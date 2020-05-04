@@ -2,8 +2,11 @@ import ioutils
 from argparse import ArgumentParser
 from scipy.stats.stats import spearmanr
 
+from tqdm import tqdm
+
 from representations.explicit import Explicit
-from representations.embedding import SVDEmbedding, Embedding
+from representations.embedding import SVDEmbedding, Embedding, VALID_SIMILARITY_MEASURES, COSINE_SIMILARITY
+
 
 def read_test_set(path):
     test = []
@@ -13,16 +16,18 @@ def read_test_set(path):
             test.append(((x.split("-")[0], y.split("-")[0]), float(sim)))
     return test 
 
-def evaluate(representation, data):
+
+def evaluate(representation: Embedding, data, similarity_measure: str) -> float:
     results = []
     oov = 0
-    for (x, y), sim in data:
+    for (x, y), sim in tqdm(data):
         if representation.oov(x) or representation.oov(y):
             oov += 1
 #           continue
-            results.append((0, sim)) 
+            results.append((0, sim))
         else:
-            results.append((representation.similarity(x, y), sim))
+            measured = representation.similarity(x, y, similarity_measure)
+            results.append((measured, sim))
     actual, expected = list(zip(*results))
     print("OOV: ", oov)
     return spearmanr(actual, expected)[0]
@@ -35,6 +40,7 @@ if __name__ == '__main__':
     parser.add_argument("--word-path", help="Path to sorted list of context words", default="")
     parser.add_argument("--num-context", type=int, help="Number context words to use", default=-1)
     parser.add_argument("--type", default="PPMI")
+    parser.add_argument("--similarity-measure", default=COSINE_SIMILARITY, type=str, choices=VALID_SIMILARITY_MEASURES)
     args = parser.parse_args()
     if args.type == "PPMI":
         year = int(args.vec_path.split("/")[-1].split(".")[0])
@@ -51,5 +57,5 @@ if __name__ == '__main__':
     else:
         rep = Embedding.load(args.vec_path, add_context=False)
     data = read_test_set(args.test_path)
-    correlation = evaluate(rep, data)
+    correlation = evaluate(rep, data, args.similarity_measure)
     print("Correlation: " + str(correlation))

@@ -1,0 +1,90 @@
+i am using min count for procruste of 100
+
+2.3 Aligning historical embeddings -> says that the alignemnts are between pairs of learned embeddings
+but in practice they are accumulated over the years --> accumulate errors?
+it also accumulates the intersections of vocabs, so each decade has less vocab than before
+
+    search
+    [alignments-issue]
+
+
+MEN test set
+https://staff.fnwi.uva.nl/e.bruni/MEN
+
+it seems like all the embeddings are already normalized
+does this affect the correlations matrix and, therefore, the softcos?
+
+
+test
+>>> python histwords_py3/vecanalysis/ws_eval.py rsrc/eng-all/sgns/1990 rsrc/MEN/MEN_dataset_lemma_form.test --type sgns
+Loading Embedding from rsrc/eng-all/sgns/1990 normalize=True
+Loading pickle file rsrc/eng-all/sgns/1990-vocab.pkl
+OOV:  24
+Correlation: 0.702050614803
+
+
+full
+>>> python histwords_py3/vecanalysis/ws_eval.py rsrc/eng-all/sgns/1990 rsrc/MEN/MEN_dataset_lemma_form_full --type sgns
+Loading Embedding from rsrc/eng-all/sgns/1990 normalize=True
+Loading pickle file rsrc/eng-all/sgns/1990-vocab.pkl
+OOV:  55
+Correlation: 0.681804970231
+
+test - spearman
+python histwords_py3/vecanalysis/ws_eval.py rsrc/eng-all/sgns/1990 rsrc/MEN/MEN_dataset_lemma_form.test --type sgns --similarity-measure softcos-spearman
+Loading Embedding from rsrc/eng-all/sgns/1990 normalize=True
+Loading pickle file rsrc/eng-all/sgns/1990-vocab.pkl
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [09:11<00:00,  1.81it/s]
+OOV:  24
+Correlation: 0.614267412701
+
+test - pearson
+python histwords_py3/vecanalysis/ws_eval.py rsrc/eng-all/sgns/1990 rsrc/MEN/MEN_dataset_lemma_form.test --type sgns --similarity-measure softcos-pearson
+OOV:  24
+Correlation: 0.528551984836
+
+example 2 - first implementation - Loop
+    Computing synchronic similarities (cosine).
+    Similarity between gay and happy from 1950s to the 2000s (cosine):
+    1950, cosine similarity = 0.39
+    1960, cosine similarity = 0.23
+    1970, cosine similarity = 0.23
+    1980, cosine similarity = 0.15
+    1990, cosine similarity = 0.07
+    2000, cosine similarity = 0.09
+    Computing synchronic similarities (softcos similarity with spearman).
+    Similarity between gay and happy from 1950s to the 2000s (softcos similarity with spearman):
+    1950, softcos similarity with spearman = 0.49
+    1960, softcos similarity with spearman = 0.28
+    1970, softcos similarity with spearman = 0.26
+    1980, softcos similarity with spearman = 0.35
+    1990, softcos similarity with spearman = 0.19
+    2000, softcos similarity with spearman = 0.30
+    Computing synchronic similarities (softcos similarity with pearson).
+    Similarity between gay and happy from 1950s to the 2000s (softcos similarity with pearson):
+    1950, softcos similarity with pearson = 0.43
+    1960, softcos similarity with pearson = 0.42
+    1970, softcos similarity with pearson = 0.15
+    1980, softcos similarity with pearson = 0.23
+    1990, softcos similarity with pearson = 0.07
+    2000, softcos similarity with pearson = 0.36
+
+example 2 - first implementation - Loop with s >= 0
+    Computing synchronic similarities (softcos similarity with spearman).
+    Similarity between gay and happy from 1950s to the 2000s (softcos similarity with spearman):
+    1950, softcos similarity with spearman = 0.35
+    1960, softcos similarity with spearman = 0.23
+    1970, softcos similarity with spearman = 0.13
+    1980, softcos similarity with spearman = 0.04
+    1990, softcos similarity with spearman = 0.09
+    2000, softcos similarity with spearman = -0.07
+    Computing synchronic similarities (softcos similarity with pearson).
+    Similarity between gay and happy from 1950s to the 2000s (softcos similarity with pearson):
+    1950, softcos similarity with pearson = 0.39
+    1960, softcos similarity with pearson = 0.26
+    1970, softcos similarity with pearson = 0.14
+    1980, softcos similarity with pearson = 0.07
+    1990, softcos similarity with pearson = 0.04
+    2000, softcos similarity with pearson = 0.34
+
+

@@ -2,15 +2,19 @@ import numpy as np
 from argparse import ArgumentParser
 
 from vecanalysis import alignment
-from vecanalysis.representations.representation_factory import create_representation
+from representations.representation_factory import create_representation
 from ioutils import write_pickle, words_above_count, mkdir
+
 
 def align_years(years, rep_type, in_dir, out_dir, count_dir, min_count, **rep_args):
     first_iter = True
     base_embed = None
+    # todo(joao) change this to do what they say in the paper:
+    #  this will accumulate procrustes, it could just align pair by pair
+    # [alignments-issue]
     for year in years:
         print("Loading year:", year)
-        year_embed =  create_representation(rep_type, in_dir + str(year), **rep_args)
+        year_embed = create_representation(rep_type, in_dir + str(year), **rep_args)
         year_words = words_above_count(count_dir, year, min_count)
         year_embed.get_subembed(year_words)
         print("Aligning year:", year)

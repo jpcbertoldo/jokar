@@ -102,12 +102,14 @@ def mkdir(directory):
         os.makedirs(directory) 
 
 def write_pickle(data, filename):
-    fp = open(filename, "wb")
-    pickle.dump(data, fp)
+    print(f"Writing pickle file {filename}")
+    with open(filename, "wb") as fp:
+        pickle.dump(data, fp)
 
 def load_pickle(filename):
-    fp = open(filename, "rb")
-    return pickle.load(fp)
+    print(f"Loading pickle file {filename}")
+    with open(filename, "rb") as fp:
+        return pickle.load(fp, encoding='latin1')
 
 def load_word_list(filename):
     fp = open(filename, "r")

@@ -14,12 +14,14 @@ def get_cosine_deltas(base_embeds, delta_embeds, words, type):
     if type == "PPMI":
         base_embeds, delta_embeds = alignment.explicit_intersection_align(base_embeds, delta_embeds)
     else:
+        # todo(joao) check if i will change something inside the alignment --> nope?
         base_embeds, delta_embeds = alignment.intersection_align(base_embeds, delta_embeds)
     print(base_embeds.m.shape, delta_embeds.m.shape)
     for word in words:
         if base_embeds.oov(word) or delta_embeds.oov(word):
             deltas[word] = float('nan')
         else:
+            # todo(joao) change this by soft cos - when should I compute the covariance matrix?
             delta = base_embeds.represent(word).dot(delta_embeds.represent(word).T)
             if type == "PPMI":
                 delta = delta[0,0]
@@ -62,8 +64,10 @@ def worker(proc_num, queue, out_pref, in_dir, target_lists, context_lists, displ
         base = create_representation(type, in_dir + str(year-year_inc),  thresh=thresh, restricted_context=context_lists[year], normalize=True, add_context=False)
         delta = create_representation(type, in_dir + str(year),  thresh=thresh, restricted_context=context_lists[year], normalize=True, add_context=False)
         print(proc_num, "Getting deltas...")
-        year_vols = get_cosine_deltas(base, delta, target_lists[year], type)
-        year_disp = get_cosine_deltas(displacement_base, delta, target_lists[year], type)
+        # todo(joao) check this
+        # inside the next function we suppose that the embeddings of two diff years are already aligned
+        year_vols = get_cosine_deltas(base, delta, target_lists[year], type)  # these two are already aligned
+        year_disp = get_cosine_deltas(displacement_base, delta, target_lists[year], type)  # these two are not!!!
         print(proc_num, "Writing results...")
         ioutils.write_pickle(year_vols, out_pref + str(year) + "-vols.pkl")
         ioutils.write_pickle(year_disp, out_pref + str(year) + "-disps.pkl")

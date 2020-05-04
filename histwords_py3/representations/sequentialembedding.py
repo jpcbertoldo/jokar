@@ -3,12 +3,14 @@ import random
 
 from representations.embedding import Embedding, SVDEmbedding
 
+
 class SequentialEmbedding:
     def __init__(self, year_embeds, **kwargs):
         self.embeds = year_embeds
  
     @classmethod
     def load(cls, path, years, **kwargs):
+        print(f"Loading {SequentialEmbedding.__name__} from {path} years={years}")
         embeds = collections.OrderedDict()
         for year in years:
             embeds[year] = Embedding.load(path + "/" + str(year), **kwargs)
@@ -23,10 +25,10 @@ class SequentialEmbedding:
             embeds[year] = embed.get_subembed(words, normalize=normalize)
         return SequentialEmbedding(embeds)
 
-    def get_time_sims(self, word1, word2):
+    def get_time_sims(self, word1, word2, similarity_measure=None):
        time_sims = collections.OrderedDict()
        for year, embed in self.embeds.items():
-           time_sims[year] = embed.similarity(word1, word2)
+           time_sims[year] = embed.similarity(word1, word2, similarity_measure=similarity_measure)
        return time_sims
 
     def get_seq_neighbour_set(self, word, n=3):
