@@ -1,7 +1,8 @@
 import os
 import collections
 import pickle as pickle
-from googlengram.indexing import get_word_indices
+#from googlengram.indexing import get_word_indices
+from histwords_py3.googlengram.indexing import get_word_indices
 
 def words_above_count(count_dir, year, min_count):
     counts = load_pickle(count_dir + str(year) + "-counts.pkl")
