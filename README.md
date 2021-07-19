@@ -12,3 +12,7 @@ Joao &amp; Oskar's HistWords project.
 
 # TODO
 * sudo apt-get install libffi-dev
+
+# archivation
+
+archived on [2021-07-19] 
