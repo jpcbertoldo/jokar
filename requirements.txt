@@ -55,7 +55,7 @@ pickleshare==0.7.5
 prometheus-client==0.7.1
 prompt-toolkit==1.0.18
 ptyprocess==0.6.0
-Pygments==2.5.2
+Pygments==2.7.4
 pylru==1.0.9
 pyparsing==2.2.0
 pyrsistent==0.15.7
